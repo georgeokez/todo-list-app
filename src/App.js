@@ -39,6 +39,28 @@ export default class App extends Component {
     }
   };
 
+  toggleTodo = (todo) => {
+    this.setState({
+      todoItems: this.state.todoItems.map((item) =>
+        item.action === todo.action ? { ...item, done: !item.done } : item
+      ),
+    });
+  };
+
+  todoTableRows = () =>
+    this.state.todoItems.map((item) => (
+      <tr key={item.action}>
+        <td>{item.action}</td>
+        <td>
+          <input
+            type="checkbox"
+            checked={item.done}
+            onChange={() => this.toggleTodo(item)}
+          />
+        </td>
+      </tr>
+    ));
+
   // Using the fat arrow syntax to define the render function
   render = () => (
     <div className="row container-fluid mt-3">
@@ -64,7 +86,17 @@ export default class App extends Component {
           </div>
         </div>
 
-        <div className="mt-5 m-2">
+        <table className="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Done</th>
+            </tr>
+          </thead>
+          <tbody>{this.todoTableRows()}</tbody>
+        </table>
+
+        {/* <div className="mt-5 m-2">
           <p>Uncompleted Todo's</p>
           <hr />
           <ol>
@@ -74,9 +106,9 @@ export default class App extends Component {
                 <li key={uncompletedTodo.action}>{uncompletedTodo.action}</li>
               ))}
           </ol>
-        </div>
+        </div> */}
 
-        <div className="m-2">
+        {/* <div className="m-2">
           <p>Completed Todo's</p>
           <hr />
           <ol>
@@ -86,7 +118,7 @@ export default class App extends Component {
                 <li key={completedTodo.action}>{completedTodo.action}</li>
               ))}
           </ol>
-        </div>
+        </div> */}
       </div>
     </div>
   );

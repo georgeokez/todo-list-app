@@ -41,21 +41,51 @@ export default class App extends Component {
 
   // Using the fat arrow syntax to define the render function
   render = () => (
-    <div>
-      <h4 className="bg-primary text-white text-center p2">
-        {this.state.userName}'s To Do list (
-        {this.state.todoItems.filter((t) => !t.done).length} items to do)
-      </h4>
-      <div className="container-fluid">
-        <div className="my-2">
-          <input
-            className="form-control"
-            value={this.state.newItemText}
-            onChange={this.updateNewItemValue}
-          />
-          <button className="btn btn-primary mt-1" onClick={this.createNewTodo}>
-            Add New Todo
-          </button>
+    <div className="row container-fluid mt-3">
+      <div className="w-50 mx-auto">
+        <h4 className="bg-primary text-white text-center p2">
+          {this.state.userName}'s To Do list (
+          {this.state.todoItems.filter((t) => !t.done).length} items to do)
+        </h4>
+
+        <div>
+          <div className="my-2">
+            <input
+              className="form-control"
+              value={this.state.newItemText}
+              onChange={this.updateNewItemValue}
+            />
+            <button
+              className="btn btn-primary mt-1"
+              onClick={this.createNewTodo}
+            >
+              Add New Todo
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5 m-2">
+          <p>Uncompleted Todo's</p>
+          <hr />
+          <ol>
+            {this.state.todoItems
+              .filter((todoItem) => todoItem.done === false)
+              .map((uncompletedTodo) => (
+                <li key={uncompletedTodo.action}>{uncompletedTodo.action}</li>
+              ))}
+          </ol>
+        </div>
+
+        <div className="m-2">
+          <p>Completed Todo's</p>
+          <hr />
+          <ol>
+            {this.state.todoItems
+              .filter((todoItem) => todoItem.done === true)
+              .map((completedTodo) => (
+                <li key={completedTodo.action}>{completedTodo.action}</li>
+              ))}
+          </ol>
         </div>
       </div>
     </div>

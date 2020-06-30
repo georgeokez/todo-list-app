@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+//Visibility Controls
 export class VisibilityControl extends Component {
   render = () => (
     <div className="form-check">

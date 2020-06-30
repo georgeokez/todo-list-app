@@ -27,9 +27,12 @@ export default class App extends Component {
 
   createNewTodo = (task) => {
     if (!this.state.todoItems.find((item) => item.action === task)) {
-      this.setState({
-        todoItems: [...this.state.todoItems, { action: task, done: false }],
-      });
+      this.setState(
+        {
+          todoItems: [...this.state.todoItems, { action: task, done: false }],
+        },
+        () => localStorage.setItem("todos", JSON.stringify(this.state))
+      );
     }
   };
 
@@ -60,11 +63,29 @@ export default class App extends Component {
     </table>
   );
 
+  componentDidMount = () => {
+    let data = localStorage.getItem("todos");
+    this.setState(
+      data != null
+        ? JSON.parse(data)
+        : {
+            userName: "George",
+            todoItems: [
+              { action: "Walk the Dog", done: false },
+              { action: "Have Breakfast", done: false },
+              { action: "Call Favour", done: true },
+              { action: "Check social media", done: false },
+            ],
+            showCompleted: true,
+          }
+    );
+  };
+
   // Using the fat arrow syntax to define the render function
   render = () => (
     <div className="row container-fluid mt-3">
       <div className="w-50 mx-auto">
-        <TodoBanner name={this.state.userName} tasks={this.state.todoItems} />
+        <TodoBanner tasks={this.state.todoItems} />
 
         <TodoCreator callback={this.createNewTodo} />
 

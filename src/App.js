@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { TodoCreator } from "./components/TodoCreator.js";
 import { TodoRow } from "./components/TodoRow.js";
 import { TodoBanner } from "./components/TodoBanner.js";
+import { VisibilityControl } from "./components/VisibilityControl.js";
 
 export default class App extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export default class App extends Component {
         { action: "Call Favour", done: true },
         { action: "Check social media", done: false },
       ],
-      //newItemText: "",
+      showCompleted: true,
     };
   }
 
@@ -40,10 +41,24 @@ export default class App extends Component {
     });
   };
 
-  todoTableRows = () =>
-    this.state.todoItems.map((item) => (
-      <TodoRow key={item.action} item={item} callback={this.toggleTodo} />
-    ));
+  todoTableRows = (doneValue) =>
+    this.state.todoItems
+      .filter((item) => item.done === doneValue)
+      .map((item) => (
+        <TodoRow key={item.action} item={item} callback={this.toggleTodo} />
+      ));
+
+  showToDoTable = (doneValue) => (
+    <table className="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Done</th>
+        </tr>
+      </thead>
+      <tbody>{this.todoTableRows(doneValue)}</tbody>
+    </table>
+  );
 
   // Using the fat arrow syntax to define the render function
   render = () => (
@@ -53,58 +68,18 @@ export default class App extends Component {
 
         <TodoCreator callback={this.createNewTodo} />
 
-        <table className="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Done</th>
-            </tr>
-          </thead>
-          <tbody>{this.todoTableRows()}</tbody>
-        </table>
+        {this.showToDoTable(false)}
 
-        {/* <div className="mt-5 m-2">
-          <p>Uncompleted Todo's</p>
-          <hr />
-          <ol>
-            {this.state.todoItems
-              .filter((todoItem) => todoItem.done === false)
-              .map((uncompletedTodo) => (
-                <li key={uncompletedTodo.action}>{uncompletedTodo.action}</li>
-              ))}
-          </ol>
-        </div> */}
+        <div className="bg-secondary text-white text-center p-2">
+          <VisibilityControl
+            description="Show Completed Tasks"
+            isChecked={this.state.showCompleted}
+            callback={(checked) => this.setState({ showCompleted: checked })}
+          />
+        </div>
 
-        {/* <div className="m-2">
-          <p>Completed Todo's</p>
-          <hr />
-          <ol>
-            {this.state.todoItems
-              .filter((todoItem) => todoItem.done === true)
-              .map((completedTodo) => (
-                <li key={completedTodo.action}>{completedTodo.action}</li>
-              ))}
-          </ol>
-        </div> */}
+        {this.state.showCompleted && this.showToDoTable(true)}
       </div>
     </div>
   );
-
-  // Using the conventional javascript method to define the render function
-  /*render() {
-    return (
-      <div>
-        <h4 className="bg-primary text-white text-center p2">
-          {this.state.userName}'s To Do list
-        </h4>
-        <button
-          className="btn btn-primary p2 m2"
-          onClick={this.changeStateData}
-        >
-          Change
-        </button>
-      </div>
-    );
-  }
-  */
 }
